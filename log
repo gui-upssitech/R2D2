@@ -1,0 +1,4 @@
+l = 0-0.85
+nom =  0 , poids =  0.85
+l = l2 (on attend True) True
+l = l3 (on attend False) False
