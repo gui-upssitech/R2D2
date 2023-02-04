@@ -4,6 +4,8 @@ module pour l'etape 1
 from projet.outils.GrapheDeLieux import GrapheDeLieux
 from projet.solvers.SolverSAT import SolverSAT
 
+from projet.outils.Tester import Tester
+
 class Variable :
 
     def __init__(self, sommet, couleur):
@@ -55,16 +57,47 @@ class Etape1 :
     
     # methodes
     # //////////////////////////////////////////////
-    def majBase(self, x : int) :
+    def majBase(self, nb_couleurs : int) :
         """
         methode de maj de la base de clauses et du nb de variables en fonction du pb traite 
         
-        :param x: parametre servant pour definir la base qui representera le probleme 
+        :param x: parametre servant pour definir la base qui representera le probleme
         """
         # A ECRIRE par les etudiants en utilisant le contenu de g
         # ajout possible de parametre => modifier aussi l'appel ds le main
-        self.base = [[-1, 2], [-1, -2]]  # a maj
-        self.nbVariables = 2             # a maj
+
+        def encode(sommet, couleur): 
+            return ((sommet+1) << 4) + (couleur+1)
+
+        def clauses_sommet(sommet):
+            clauses = []
+            clauses.append([encode(sommet, couleur) for couleur in range(nb_couleurs)])
+
+            for couleur in range(nb_couleurs):
+                next_couleur = (couleur + 1) % nb_couleurs
+                clauses.append([
+                    -encode(sommet, couleur),
+                    -encode(sommet, next_couleur)
+                ])
+            
+            return clauses
+
+        def clauses_adjacents(sommet):
+            clauses = []
+            for couleur in range(nb_couleurs):
+                for neighbour in self.g.getAdjacents(sommet):
+                    clauses.append([
+                        -encode(sommet, couleur),
+                        -encode(neighbour, couleur)
+                        ])
+            return clauses
+
+        self.base = []
+        for sommet in self.g.getSommets():
+            self.base += clauses_sommet(sommet)
+            self.base += clauses_adjacents(sommet)
+
+        self.nbVariables = self.g.getNbSommets() * nb_couleurs
     
     def execSolver(self) : 
         """
@@ -79,9 +112,26 @@ class Etape1 :
         """
         affichage de la base de clauses representant le probleme 
         """
+
+        def _decode_one(number):
+            is_not = number < 0
+            number = abs(number)
+
+            sommet = number >> 4 - 1
+            couleur = number & 0b1111 - 1
+
+            str = f"Sommet {sommet} est de couleur {couleur}"
+            if is_not:
+                str = f"not[ {str} ]"
+
+            return str
+
+        _decode = lambda clause: " or ".join([_decode_one(x) for x in clause])
+
+
         print('Base de clause utilise ',self.nbVariables,' variables et contient les clauses suivantes : ') 
         for cl in self.base :
-            print(cl) 
+            print(_decode(cl)) 
     
 
 class __testEtape1__ : 
@@ -90,8 +140,49 @@ class __testEtape1__ :
     """
     # TESTS
     # //////////////////////////////////////////////
-    if __name__ == '__main__':
+    if __name__ == "__main__":
+        tester = Tester()
+
+        e = Etape1("Data/town10.txt", True)
+
+        e.majBase(3)
+        tester.test("Fichier town10.txt avec 3 couleurs", e.execSolver(), True)
+
+        e.majBase(2)
+        tester.test("Fichier town10.txt avec 2 couleurs", e.execSolver(), False)
+
+        e.majBase(4)
+        tester.test("Fichier town10.txt avec 4 couleurs", e.execSolver(), True)
+
+        print("")
+
+        e = Etape1("Data/pb-etape1/flat20_3_0.col",False) ;
+        e.majBase(4)
+        tester.test("Fichier flat20_3_0.col avec 4 couleurs", e.execSolver(), True)
         
+        e.majBase(3)
+        tester.test("Fichier flat20_3_0.col avec 3 couleurs", e.execSolver(), True)
+        
+        e.majBase(2)
+        tester.test("Fichier flat20_3_0.col avec 2 couleurs", e.execSolver(), False)
+        
+        print("")
+
+        e = Etape1("Data/pb-etape1/jean.col",False)
+        e.majBase(10)
+        tester.test("Fichier jean.col avec 10 couleurs", e.execSolver(), True)
+
+        e.majBase(9)
+        tester.test("Fichier jean.col avec 9 couleurs", e.execSolver(), False)
+
+        e.majBase(3)
+        tester.test("Fichier jean.col avec 3 couleurs", e.execSolver(), False)
+
+        print("")
+        tester.summary()
+
+
+    def old_main():
         # TEST 1 : town10.txt avec 3 couleurs
         print("Test sur fichier town10.txt avec 3 couleurs") ;
         e = Etape1("Data/town10.txt",True) ;

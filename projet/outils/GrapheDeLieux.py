@@ -225,7 +225,7 @@ class GrapheDeLieux  :
                     # la ligne commencant par p est avant ttes celles commencant par e          
                     nbSom = int(s[2])
                     g.setNbSommets(nbSom) 
-                    print(g.getNbSommets())
+                    # print(g.getNbSommets())
                     # traiter les sommets
                     for i in range(0, nbSom) :
                        x : int = 0
@@ -256,7 +256,7 @@ class GrapheDeLieux  :
         lignes = fic.readlines()
         nb : int = int(lignes[0])
         g.setNbSommets(nb) 
-        print(nb)
+        # print(nb)
         # lecture des sommets
         for i in range(1, nb+1) : 
             tmp = lignes[i].split(" ")

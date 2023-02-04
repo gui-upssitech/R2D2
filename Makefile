@@ -8,6 +8,9 @@ all :
 	python3 projet/solvers/SolverTabou.py >> log 
 	diff log projet/tests/logReference
 
+step1 : 
+	clear ; python3 projet/etape1/Etape1.py
+
 clear :
 	\rm log
 		
