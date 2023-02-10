@@ -6,14 +6,45 @@ from projet.solvers.SolverSAT import SolverSAT
 
 from projet.outils.Tester import Tester
 
+import sys
+
 class Variable :
 
-    def __init__(self, sommet, couleur):
-        self.sommet = sommet
-        self.couleur = couleur
+    @staticmethod
+    def encode(sommet, couleur, is_not=False) -> int: 
+        """
+        encode un couple (sommet, couleur) en un entier
+        
+        :param sommet: le sommet a encoder
+        :param couleur: la couleur a encoder
+        
+        :return: l'entier correspondant au couple (sommet, couleur)
+        
+        :note: l'entier est negatif si is_not est vrai
+        """
+        sign = -1 if is_not else 1
+        return sign * (((sommet+1) << 8) + (couleur+1))
 
-    def to_int(self):
-        return (self.sommet << 4) + self.couleur
+    @staticmethod
+    def decode(number) -> tuple[int, int, bool]:
+        """
+        decode un entier en un couple (sommet, couleur)
+
+        :param number: l'entier a decoder
+
+        :return: le couple (sommet, couleur) correspondant a l'entier
+
+        :note: le booleen est vrai si l'entier est negatif
+        """
+        is_not = number < 0
+        number = abs(number)
+
+        sommet = (number >> 8)
+        couleur = (number & 0b11111111)
+
+        return (sommet, couleur, is_not)
+
+    
 
 class Etape1 :
     """
@@ -66,18 +97,15 @@ class Etape1 :
         # A ECRIRE par les etudiants en utilisant le contenu de g
         # ajout possible de parametre => modifier aussi l'appel ds le main
 
-        def encode(sommet, couleur): 
-            return ((sommet+1) << 4) + (couleur+1)
-
         def clauses_sommet(sommet):
             clauses = []
-            clauses.append([encode(sommet, couleur) for couleur in range(nb_couleurs)])
+            clauses.append([Variable.encode(sommet, couleur) for couleur in range(nb_couleurs)])
 
             for couleur in range(nb_couleurs):
                 next_couleur = (couleur + 1) % nb_couleurs
                 clauses.append([
-                    -encode(sommet, couleur),
-                    -encode(sommet, next_couleur)
+                    Variable.encode(sommet, couleur, is_not=True),
+                    Variable.encode(sommet, next_couleur, is_not=True)
                 ])
             
             return clauses
@@ -87,8 +115,8 @@ class Etape1 :
             for couleur in range(nb_couleurs):
                 for neighbour in self.g.getAdjacents(sommet):
                     clauses.append([
-                        -encode(sommet, couleur),
-                        -encode(neighbour, couleur)
+                        Variable.encode(sommet, couleur, is_not=True),
+                        Variable.encode(neighbour, couleur, is_not=True)
                         ])
             return clauses
 
@@ -114,19 +142,15 @@ class Etape1 :
         """
 
         def _decode_one(number):
-            is_not = number < 0
-            number = abs(number)
+            sommet, couleur, is_not = Variable.decode(number)
 
-            sommet = number >> 4 - 1
-            couleur = number & 0b1111 - 1
-
-            str = f"Sommet {sommet} est de couleur {couleur}"
+            str = f"({sommet}, {couleur})"
             if is_not:
-                str = f"not[ {str} ]"
+                str = f"-{str}"
 
             return str
 
-        _decode = lambda clause: " or ".join([_decode_one(x) for x in clause])
+        _decode = lambda clause: ", ".join([_decode_one(x) for x in clause])
 
 
         print('Base de clause utilise ',self.nbVariables,' variables et contient les clauses suivantes : ') 
@@ -140,7 +164,7 @@ class __testEtape1__ :
     """
     # TESTS
     # //////////////////////////////////////////////
-    if __name__ == "__main__":
+    def main_new():
         tester = Tester()
 
         e = Etape1("Data/town10.txt", True)
@@ -182,7 +206,7 @@ class __testEtape1__ :
         tester.summary()
 
 
-    def old_main():
+    def main():
         # TEST 1 : town10.txt avec 3 couleurs
         print("Test sur fichier town10.txt avec 3 couleurs") ;
         e = Etape1("Data/town10.txt",True) ;
@@ -246,3 +270,8 @@ class __testEtape1__ :
         print("Resultat obtenu (on attend False) :",e.execSolver()) ;
         
 
+if __name__ == '__main__' :
+    if len(sys.argv) > 1 and sys.argv[1] == "new":
+        __testEtape1__.main_new()
+    else:
+        __testEtape1__.main()

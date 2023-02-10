@@ -9,7 +9,10 @@ all :
 	diff log projet/tests/logReference
 
 step1 : 
-	clear ; python3 projet/etape1/Etape1.py
+	clear ; python projet/etape1/Etape1.py new
+
+step2 :
+	clear ; python projet/etape2/Etape2.py new
 
 clear :
 	\rm log
