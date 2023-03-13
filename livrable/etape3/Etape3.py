@@ -3,7 +3,7 @@ module principal pour l'etape 3
 """
 
 from projet.outils.GrapheDeLieux import GrapheDeLieux
-from solutions.etape3 import SolEtape3 as UneSolution
+from projet.etape3.UneSolution import UneSolution
 
 # rajouter ensuite le import permettant d'utiliser les solvers choisis
 # from solvers.... import ...

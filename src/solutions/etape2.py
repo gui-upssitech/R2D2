@@ -28,6 +28,8 @@ class EtatCas1(EtatBase) :
     def k(self, e) :
         return self.tg.getCoutArete(self.etat_courant, e.etat_courant)
     
+    #######################################################################################
+
     def __init__(self, tg : GrapheDeLieux, etat_courant: int = 0, etat_fin: int = None) :
         self.tg = tg
 
@@ -67,6 +69,8 @@ class EtatCas2(EtatBase) :
     
     def k(self, e) :
         return self.tg.getCoutArete(self.etat_courant, e.etat_courant)
+
+    #######################################################################################
 
     def all_visited(self) :
         return len(set(self.visited)) == self.tg.getNbSommets()
