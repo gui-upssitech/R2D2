@@ -13,8 +13,9 @@ class Etape2 :
     classe pour realiser les tests de l'etape 2 du projet (execution des cas 1, 2 et 3 : tache 2) 
     """ 
 
-    def test(cas):
-        if SolverAStar.aStar(cas) is None:
+    def test(cas, opti: bool = False):
+        sol = SolverAStar.aStar(cas) if not opti else SolverAStar.aStarOpti(cas)
+        if sol is None:
             print("Pas de solution :(")
 
     def test_cas_1():
@@ -68,7 +69,7 @@ class Etape2 :
         tg = GrapheDeLieux.loadGraph("Data/town10.txt",True) 
         cas2 = EtatCas2(tg) 
         print("======== TEST CAS 2 10 villes de 0 a 9 : \n")
-        Etape2.test(cas2)
+        Etape2.test(cas2, opti=True)
 
     def test_cas_3():
         # ///////////////////////////////////////////////
@@ -78,37 +79,37 @@ class Etape2 :
         tg = GrapheDeLieux.loadGraph("Data/town6.txt", True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 6 villes de 0 a 5 : \n")
-        Etape2.test(cas3)
+        Etape2.test(cas3, opti=True)
                                                         
         # cas : 7 villes de 0 à 6
         tg = GrapheDeLieux.loadGraph("Data/town7.txt",True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 7 villes de 0 a 6 : \n")
-        Etape2.test(cas3) 
+        Etape2.test(cas3, opti=True) 
         
         # cas : 8 villes de 0 à 7
         tg = GrapheDeLieux.loadGraph("Data/town8.txt",True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 8 villes de 0 a 7 : \n")
-        Etape2.test(cas3)                         
+        Etape2.test(cas3, opti=True)                         
         
         # cas : 9 villes de 0 à 8
         tg = GrapheDeLieux.loadGraph("Data/town9.txt",True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 9 villes de 0 a 8 : \n")
-        Etape2.test(cas3)                          
+        Etape2.test(cas3, opti=True)                          
         
         # cas : 10 villes de 0 à 9
         tg = GrapheDeLieux.loadGraph("Data/town10.txt",True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 10 villes de 0 a 9 : \n")
-        Etape2.test(cas3)                          
+        Etape2.test(cas3, opti=True)                          
         
         # cas : 11 villes de 0 à 10
         tg = GrapheDeLieux.loadGraph("Data/town11.txt",True) 
         cas3 = EtatCas3(tg) 
         print("======== TEST CAS 3 11 villes de 0 a 10 : \n")
-        Etape2.test(cas3)
+        Etape2.test(cas3, opti=True)
 
 # tests 
 # ////////////////////////////////////////////
