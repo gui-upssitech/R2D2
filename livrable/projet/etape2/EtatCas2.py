@@ -24,14 +24,8 @@ class EtatCas2(Etat) :
     def k(self, e) :
         return self.tg.getCoutArete(self.etat_courant, e.etat_courant)
     
-    def displayPath(self, pere) :
-        chemin = []
-        cur = self
-        while cur != None:
-            chemin.append(cur.etat_courant)
-            cur = pere[cur]
-
-        print("resultat trouve :", chemin)
+    def displayPath(self, pere = None) :
+        print("resultat trouve :", self.visited[::-1])
 
     #######################################################################################
 

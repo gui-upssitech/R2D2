@@ -1,20 +1,7 @@
 from projet.outils.GrapheDeLieux import GrapheDeLieux, Fils, Lieu
 from projet.etape2.Etat import Etat
 
-class EtatBase(Etat):
-    etat_courant: int
-
-    def displayPath(self, pere) :
-        chemin = []
-        cur = self
-        while cur != None:
-            chemin.append(cur.etat_courant)
-            cur = pere[cur]
-
-        print("resultat trouve :", chemin)
-
-
-class EtatCas1(EtatBase) :
+class EtatCas1(Etat) :
     def estSolution(self) :
         return self.etat_courant == self.etat_fin
     
@@ -29,6 +16,15 @@ class EtatCas1(EtatBase) :
         return self.tg.getCoutArete(self.etat_courant, e.etat_courant)
     
     #######################################################################################
+    
+    def displayPath(self, pere) :
+        chemin = []
+        cur = self
+        while cur != None:
+            chemin.append(cur.etat_courant)
+            cur = pere[cur]
+
+        print("resultat trouve :", chemin)
 
     def __init__(self, tg : GrapheDeLieux, etat_courant: int = 0, etat_fin: int = None) :
         self.tg = tg
@@ -51,7 +47,7 @@ class EtatCas1(EtatBase) :
         return f"Etat[etat_courant={self.etat_courant}, etat_fin={self.etat_fin}]"
     
 
-class EtatCas2(EtatBase) :
+class EtatCas2(Etat) :
 
     def estSolution(self) :
         is_start = self.etat_courant == self.etat_depart
@@ -69,6 +65,9 @@ class EtatCas2(EtatBase) :
     
     def k(self, e) :
         return self.tg.getCoutArete(self.etat_courant, e.etat_courant)
+    
+    def displayPath(self, pere = None) :
+        print("resultat trouve :", self.visited[::-1])
 
     #######################################################################################
 

@@ -14,6 +14,9 @@ clear :
 doc :	
 	pdoc --html -f -o Doc projet
 
+scip:
+	src/projet/solvers/SCIP/bin/scip -f src/projet/etape5/test.zpl
+
 step-% :
 	python3 src/projet/etape$*/Etape$*.py
 

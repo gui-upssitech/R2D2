@@ -5,7 +5,7 @@ from projet.etape3.Solution import Solution
 
 from random import Random
 
-class SolEtape3(Solution) :
+class UneSolution(Solution) :
     
     def lesVoisins(self) :
         voisinage = []
@@ -14,7 +14,7 @@ class SolEtape3(Solution) :
         for i in range(1, len(chm_modifiable)):
             chm_modifiable[i-1], chm_modifiable[i] = chm_modifiable[i], chm_modifiable[i-1]
             nouveau_chemin = [0] + chm_modifiable + [0]
-            voisinage.append( SolEtape3(self.tg, nouveau_chemin) )
+            voisinage.append( UneSolution(self.tg, nouveau_chemin) )
 
         return voisinage
 
@@ -33,7 +33,7 @@ class SolEtape3(Solution) :
         self.rd.shuffle(chemin)
         chemin = [0] + chemin + [0]
 
-        return SolEtape3(self.tg, chemin)
+        return UneSolution(self.tg, chemin)
     
     
     def displayPath(self) :
@@ -60,10 +60,10 @@ class SolEtape3(Solution) :
     
     
     def __eq__(self,o) :
-        if not isinstance(o, SolEtape3):
+        if not isinstance(o, UneSolution):
             return False
 
-        e: SolEtape3 = o
+        e: UneSolution = o
         return self.chemin == e.chemin
     
 
